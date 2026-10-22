@@ -50,17 +50,19 @@ slides:
     line_end: null
 - id: slide-72abb1897139
   archived: false
-  layout: quote
+  layout: big_statement
   title: One Port for Everything
-  quote: Think of MCP like a USB-C port for AI applications. Just as USB-C provides a standardized way
-    to connect electronic devices, MCP provides a standardized way to connect AI applications to external
-    systems.
-  attribution: Model Context Protocol documentation, "What is MCP?" (2026-07-28)
-  speaker_notes: 'The USB-C analogy does the heavy lifting: one connector standard, many peripherals,
-    and anything built against it works everywhere. MCP standardizes the protocol for context exchange
-    between applications and external systems. Point out the scope boundary from the architecture docs:
-    MCP focuses solely on the protocol for context exchange; it does not dictate how AI applications use
-    LLMs or manage the context they receive.'
+  statement: 'MCP is the USB-C port of AI: one open standard that connects applications to tools, data,
+    and workflows.'
+  speaker_notes: 'Verbatim from the docs: "Think of MCP like a USB-C port for AI applications. Just as
+    USB-C provides a standardized way to connect electronic devices, MCP provides a standardized way to
+    connect AI applications to external systems." (MCP documentation, "What is MCP?", 2026-07-28.) The
+    slide states the analogy directly because the quote box is too small for the full sentence. The USB-C
+    analogy does the heavy lifting: one connector standard, many peripherals, and anything built against
+    it works everywhere. MCP standardizes the protocol for context exchange between applications and external
+    systems. Point out the scope boundary from the architecture docs: MCP focuses solely on the protocol
+    for context exchange; it does not dictate how AI applications use LLMs or manage the context they
+    receive.'
   purpose: 'Anchor the mental model: one standard connector for many tools and data sources.'
   citations:
   - source_id: source-ee13de6f50c3
@@ -118,6 +120,33 @@ slides:
   - source_id: source-ce1f4bdd0ec1
     label: Architecture overview — host, client, and server participants; VS Code example; local vs remote
       servers
+    url: null
+    line_start: null
+    line_end: null
+- id: slide-4e1f3f9e0c94
+  archived: false
+  layout: image
+  title: The Architecture Diagram
+  image_source_id: source-038f6eca5fe5
+  image_url: null
+  caption: 'General MCP architecture: one host, one client per server; local servers (A, B) and a remote
+    server (C). Source: MCP documentation, general architecture diagram.'
+  speaker_notes: 'Walk the diagram left to right. The host (Claude, IDEs, tools) sits on the user''s machine
+    and speaks the MCP protocol to each server. Servers A and B run locally and read local data sources
+    (files, databases); server C runs on the Internet and reaches remote services through web APIs. Two
+    teaching points: first, every server connection is its own dedicated client, so one host scales to
+    many servers; second, ''local'' versus ''remote'' is a deployment and transport difference (stdio
+    versus Streamable HTTP), not a protocol difference — the same JSON-RPC messages flow in all three
+    links.'
+  purpose: Visually consolidate the host/client/server model, including local and remote deployments.
+  citations:
+  - source_id: source-038f6eca5fe5
+    label: Official MCP general architecture diagram (modelcontextprotocol docs)
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-ce1f4bdd0ec1
+    label: Architecture overview — participants and local vs remote servers
     url: null
     line_start: null
     line_end: null

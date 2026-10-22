@@ -1,0 +1,207 @@
+schema_version: 1
+id: presentation-4198b0a2f693
+lecture_id: lecture-45c0827d850e
+slides:
+- id: slide-a20e89d9ff8e
+  archived: false
+  layout: title
+  title: Building an MCP Server
+  subtitle: Tools, Resources, and Prompts
+  speaker_notes: This is the hands-on lecture. We move from the architecture we mapped in Lecture 1 to
+    actually building a server. By the end you will have scaffolded a working server, exposed one tool,
+    one resource, and one prompt, and debugged it with the MCP Inspector. We lean on the official Python
+    and TypeScript SDKs and the official build-a-server tutorial.
+  purpose: 'Frame the hands-on goal: scaffold, run, and test a real MCP server exposing a tool, a resource,
+    and a prompt.'
+  citations: []
+- id: slide-0fc774f95936
+  archived: false
+  layout: bullets
+  title: What a Server Is
+  bullets:
+  - A program that exposes capabilities to AI apps via a standard protocol
+  - 'Examples: file system, database, GitHub, Slack, and calendar servers'
+  - One server = one domain of functionality (e.g. weather, files)
+  - Official SDKs in many languages; Python and TypeScript are Tier 1
+  - The same SDK builds servers and clients across stdio and HTTP
+  speaker_notes: 'An MCP server is just a program. It wraps some capability — a database, a REST API,
+    the file system — and exposes it over the MCP protocol so any host can use it. The official docs list
+    file system, database, GitHub, Slack, and calendar servers as common examples. You don''t write protocol
+    code by hand: the official SDKs (Python and TypeScript are Tier 1, alongside C# and Go) handle the
+    wire format, and the same SDK lets you build both servers and clients.'
+  purpose: Define what an MCP server is and name the official SDKs that make one easy to build.
+  citations:
+  - source_id: source-cf5bfe1c2e86
+    label: Understanding MCP servers (server concepts)
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-fd7ab71206de
+    label: Official MCP SDKs
+    url: null
+    line_start: null
+    line_end: null
+- id: slide-7f84a96e388e
+  archived: false
+  layout: two_column
+  title: The Three Building Blocks
+  left_content:
+  - Tools (model-controlled)
+  - Functions the LLM actively calls based on context
+  - Can write to databases, call APIs, or modify files
+  - Schema-defined; each performs one clearly typed operation
+  - Discovered via tools/list, executed via tools/call
+  - May require user consent before running
+  right_content:
+  - Resources & Prompts
+  - 'Resources (app-controlled): read-only context data'
+  - Each has a URI and a MIME type
+  - Fixed URIs, or parameterized resource templates
+  - 'Prompts (user-controlled): pre-built instruction templates'
+  - Guide the model to use specific tools and resources
+  speaker_notes: 'Servers expose capabilities through exactly three building blocks, and it matters who
+    controls each. Tools are model-controlled: the LLM decides when to call them, and they can do real,
+    sometimes destructive work — writing to a database, sending a message, modifying a file — so MCP supports
+    user consent before a tool runs. Resources are application-controlled: read-only, passive data such
+    as file contents, schemas, or API docs, each identified by a URI and a MIME type; you can have fixed
+    direct resources or parameterized templates like travel://activities/{city}/{category}. Prompts are
+    user-controlled: pre-built instruction templates that nudge the model to use particular tools and
+    resources together. On the wire, tools use tools/list and tools/call; resources use resources/list,
+    resources/templates/list, resources/read, and resources/subscribe.'
+  purpose: Separate the three server capabilities and who controls each, with their wire methods.
+  citations:
+  - source_id: source-cf5bfe1c2e86
+    label: Understanding MCP servers (server concepts)
+    url: null
+    line_start: null
+    line_end: null
+- id: slide-dbc2a5316a24
+  archived: false
+  layout: big_statement
+  title: You Write the Logic
+  statement: You write plain Python with type hints and docstrings. The SDK generates the schema, validation,
+    and protocol handling.
+  speaker_notes: null
+  purpose: Land the core insight that the SDK turns type hints and docstrings into the schema and protocol
+    machinery.
+  citations:
+  - source_id: source-88546c2c85f8
+    label: MCP Python SDK docs (v2)
+    url: null
+    line_start: null
+    line_end: null
+- id: slide-3cccfc9116ec
+  archived: false
+  layout: code
+  title: A Complete Server in Ten Lines
+  code: "from mcp.server import MCPServer\nmcp = MCPServer(\"Demo\")\n\n@mcp.tool()\ndef add(a: int, b:\
+    \ int) -> int:\n    \"\"\"Add two numbers.\"\"\"\n    return a + b\n\n@mcp.resource(\"greeting://{name}\"\
+    )\ndef greeting(name: str) -> str:\n    \"\"\"Greet someone by name.\"\"\"\n    return f\"Hello, {name}!\""
+  language: python
+  speaker_notes: 'This is a complete, working MCP server: one tool (add) and one templated resource (greeting://{name}).
+    There is no JSON Schema anywhere — a: int, b: int is the schema, and the docstrings become the descriptions.
+    The SDK generates tool definitions, validates arguments, and handles the JSON-RPC. Run it with uv
+    run mcp dev server.py, which starts the server and opens the MCP Inspector; call add with a=1, b=2
+    to get 3, and read greeting://World to get ''Hello, World!'' The same pattern works in TypeScript
+    and the other official SDKs. (The official build-a-server tutorial uses the equivalent FastMCP class
+    for its weather server.)'
+  purpose: Show a minimal, complete server that exposes a tool and a resource using type hints.
+  citations:
+  - source_id: source-88546c2c85f8
+    label: MCP Python SDK docs (v2)
+    url: null
+    line_start: null
+    line_end: null
+- id: slide-aeb4f81e0e9f
+  archived: false
+  layout: bullets
+  title: Running & Wiring the Server
+  bullets:
+  - 'Run it over stdio: mcp.run(transport="stdio")'
+  - The host launches it and speaks JSON-RPC over the pipe
+  - 'STDIO servers: never log to stdout — it corrupts JSON-RPC'
+  - Log to stderr or a file instead (a logging library)
+  - 'HTTP servers: ordinary stdout logging is fine'
+  - Wire it into a host, e.g. a Claude for Desktop config
+  speaker_notes: 'The quickstart weather server runs over stdio: mcp.run(transport=''stdio''). The host
+    — Claude for Desktop in the tutorial — launches the server as a child process and talks JSON-RPC over
+    stdin/stdout. That is why the logging rule matters: for stdio servers, anything written to stdout
+    is interpreted as a protocol message, so a stray print() corrupts the JSON-RPC stream and breaks the
+    server. Use file=sys.stderr or a logging library that writes to stderr or a file. For HTTP-based (Streamable
+    HTTP) servers, stdout is fine because it does not carry the protocol. To connect the server you edit
+    the host config — for Claude for Desktop that is claude_desktop_config.json under the mcpServers key
+    — with the command (uv) and args that launch your server, using an absolute path. The official tutorial
+    builds a weather server exposing get_alerts and get_forecast as its two tools.'
+  purpose: Explain how a stdio server is launched, wired into a host, and the stdout logging gotcha.
+  citations:
+  - source_id: source-cb7732d7d88f
+    label: Build an MCP server (official tutorial)
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-88546c2c85f8
+    label: MCP Python SDK docs (v2)
+    url: null
+    line_start: null
+    line_end: null
+- id: slide-0bcb7e296a53
+  archived: false
+  layout: bullets
+  title: Debugging with the Inspector
+  bullets:
+  - 'The MCP Inspector: the reference tool for testing servers'
+  - 'One package, three clients: Web, CLI, and TUI'
+  - 'Web: npx @modelcontextprotocol/inspector opens a browser UI'
+  - 'CLI: --cli is scriptable for CI (tools/list, tools/call)'
+  - 'TUI: --tui gives an interactive terminal client'
+  - uv run mcp dev server.py opens the Inspector for you
+  speaker_notes: 'The MCP Inspector is the reference developer tool for testing and debugging MCP servers.
+    It ships as one package, @modelcontextprotocol/inspector, with three clients behind one binary, all
+    built on the same core so a connection behaves identically. The Web client (npx @modelcontextprotocol/inspector)
+    is the richest — a full graphical inspector in the browser where you list tools, fill in the generated
+    argument forms, and watch the JSON-RPC exchange. The CLI client (add --cli) is scriptable and machine-readable,
+    ideal for CI, shell pipelines, and coding agents: for example --method tools/list to enumerate tools,
+    or --method tools/call --tool-name get_weather --tool-arg city=Boston --format json piped into jq.
+    The TUI client (add --tui) is an interactive terminal UI for when a browser is not available. It needs
+    Node 22.19 or newer and runs straight through npx. In the Python SDK, uv run mcp dev server.py starts
+    your server and opens the Inspector automatically.'
+  purpose: Introduce the MCP Inspector's three clients and how to launch and script it.
+  citations:
+  - source_id: source-09db13341176
+    label: MCP Inspector (developer tool)
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-88546c2c85f8
+    label: MCP Python SDK docs (v2)
+    url: null
+    line_start: null
+    line_end: null
+- id: slide-be6ee50e2140
+  archived: false
+  layout: closing
+  title: Key Takeaways & Lab
+  text: 'A server is a program exposing tools, resources, and prompts. With an official SDK, a few type-annotated
+    functions become a working server: run it over stdio, wire it into a host, and debug it with the Inspector.
+    Lab: scaffold a Python or TypeScript server, expose one tool, one resource, and one prompt, and verify
+    each in the Inspector.'
+  speaker_notes: 'Recap: an MCP server is a program exposing three building blocks — tools (model-controlled),
+    resources (application-controlled), and prompts (user-controlled). The official SDKs do the heavy
+    lifting: type hints become JSON Schema, docstrings become descriptions, and the SDK handles validation
+    and the JSON-RPC wire. You run the server over stdio, wire it into a host via its config, and remember
+    the stdout logging rule for stdio servers. You debug everything with the MCP Inspector''s web, CLI,
+    and TUI clients. For the lab, scaffold a server in Python or TypeScript, expose at least one tool,
+    one resource, and one prompt with correct schemas, then verify each in the Inspector. Next, Lecture
+    3 turns to the security risks of the servers you now know how to build.'
+  purpose: Consolidate the building workflow and assign the scaffold-and-test lab.
+  citations:
+  - source_id: source-88546c2c85f8
+    label: MCP Python SDK docs (v2)
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-cf5bfe1c2e86
+    label: Understanding MCP servers (server concepts)
+    url: null
+    line_start: null
+    line_end: null

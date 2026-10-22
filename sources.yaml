@@ -30,3 +30,38 @@ sources:
   label: 'Hou et al., MCP: Landscape, Security Threats & Future Research (arXiv 2503.23278)'
   admitted_at: '2026-10-22T11:18:26.941596+00:00'
   representation: local-quick
+- id: source-038f6eca5fe5
+  resource_id: resource-ad2ff472a6f2
+  source_version_id: 241dcbca3493aa5d7d7541f2eca81df8f8e27c73f1c3c6e37b733e55b53ed33f
+  label: Official MCP architecture diagram (host, local & remote servers; modelcontextprotocol docs)
+  admitted_at: '2026-10-22T12:08:34.480731+00:00'
+- id: source-fd7ab71206de
+  resource_id: resource-cc25b4353fec
+  source_version_id: bbe581a92ca95505f0a430bbf013aae22ff6f95e141fc110a511d290df842f4b
+  label: 'MCP Docs: Official SDKs (2025-11-25)'
+  admitted_at: '2026-10-22T12:14:21.656746+00:00'
+  representation: local-quick
+- id: source-cb7732d7d88f
+  resource_id: resource-0712ec2fc5c9
+  source_version_id: 4c486c7cfc239730dd1857b555cea0214a88b608a39986c5ddf38ab96478b727
+  label: 'MCP Docs: Build an MCP server tutorial (2025-11-25)'
+  admitted_at: '2026-10-22T12:14:21.937285+00:00'
+  representation: local-quick
+- id: source-09db13341176
+  resource_id: resource-f21ffd28d888
+  source_version_id: 492ee8a82b567b98646f5958eb945770ceb3cb0291169a7864ae611fbfcaaea5
+  label: 'MCP Docs: MCP Inspector developer tool (2026-07-28)'
+  admitted_at: '2026-10-22T12:14:22.165682+00:00'
+  representation: local-quick
+- id: source-cf5bfe1c2e86
+  resource_id: resource-794320090095
+  source_version_id: 3ab09234bce939d765e30646cf1a99e86b279699536b44da9524c78e438d0b23
+  label: 'MCP Docs: Understanding MCP servers (server concepts)'
+  admitted_at: '2026-10-22T12:14:55.505566+00:00'
+  representation: local-quick
+- id: source-88546c2c85f8
+  resource_id: resource-f4b7b5a2c8fd
+  source_version_id: 4454b1b940b1ed870882c0c151f9e8a41b95624e8ed55ea9fba30bc8ed5c77a6
+  label: MCP Python SDK docs (v2, official)
+  admitted_at: '2026-10-22T12:24:37.602844+00:00'
+  representation: local-quick
