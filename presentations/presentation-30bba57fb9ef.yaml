@@ -1,0 +1,245 @@
+schema_version: 1
+id: presentation-30bba57fb9ef
+lecture_id: lecture-90d4669983dd
+slides:
+- id: slide-b03e781619c7
+  archived: false
+  layout: title
+  title: Why MCP Exists
+  subtitle: The fragmentation problem and the client/host/server architecture
+  speaker_notes: 'Welcome. You already know HTTP and JSON; MCP is built directly on both: JSON-RPC 2.0
+    messages carried over stdio or HTTP. Today: (1) the integration problem MCP solves, (2) the host/client/server
+    architecture, (3) the two protocol layers, (4) lifecycle and capability negotiation, and (5) what
+    a real message looks like on the wire. By the end you should be able to trace a request from a host
+    through a client to a server, and explain why the architecture draws these security boundaries.'
+  purpose: 'Frame the lecture: what MCP standardizes, why it exists, and how its architecture is organized.'
+  citations:
+  - source_id: source-ee13de6f50c3
+    label: What is MCP? — MCP is an open-source standard for connecting AI applications to external systems
+    url: null
+    line_start: null
+    line_end: null
+- id: slide-8041493cd041
+  archived: false
+  layout: bullets
+  title: The Integration Problem
+  bullets:
+  - Before MCP, every AI app hand-rolled integrations for each tool and data source
+  - N apps x M tools meant N x M one-off connectors, each with its own schema
+  - Tool-calling formats were provider-specific, fragmenting the ecosystem across vendors
+  - Context stayed locked in one app; switching providers meant rebuilding integrations
+  - No shared standard existed for how models discover and invoke external capabilities
+  speaker_notes: 'Walk through the N-by-M matrix: before MCP, every new AI application had to re-implement
+    every integration by hand. The specification frames MCP''s motivation directly: it takes inspiration
+    from the Language Server Protocol, which standardized adding language support across a whole tool
+    ecosystem; MCP does the same for context and tools across the ecosystem of AI applications. Emphasize
+    that pre-MCP ''tool calling'' was a per-provider API feature, not an interoperable protocol, which
+    is why integrations could not move between apps or vendors.'
+  purpose: Show the pre-MCP fragmentation cost that motivates a standard protocol.
+  citations:
+  - source_id: source-6b90b0bc68c7
+    label: Specification 2025-11-25 — MCP as an open protocol for LLM applications and external data sources
+      and tools
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-ee13de6f50c3
+    label: What is MCP? — a standardized way to connect AI applications to external systems
+    url: null
+    line_start: null
+    line_end: null
+- id: slide-72abb1897139
+  archived: false
+  layout: quote
+  title: One Port for Everything
+  quote: Think of MCP like a USB-C port for AI applications. Just as USB-C provides a standardized way
+    to connect electronic devices, MCP provides a standardized way to connect AI applications to external
+    systems.
+  attribution: Model Context Protocol documentation, "What is MCP?" (2026-07-28)
+  speaker_notes: 'The USB-C analogy does the heavy lifting: one connector standard, many peripherals,
+    and anything built against it works everywhere. MCP standardizes the protocol for context exchange
+    between applications and external systems. Point out the scope boundary from the architecture docs:
+    MCP focuses solely on the protocol for context exchange; it does not dictate how AI applications use
+    LLMs or manage the context they receive.'
+  purpose: 'Anchor the mental model: one standard connector for many tools and data sources.'
+  citations:
+  - source_id: source-ee13de6f50c3
+    label: What is MCP? — the USB-C analogy for standardized connectivity
+    url: null
+    line_start: null
+    line_end: null
+- id: slide-3a71a70001eb
+  archived: false
+  layout: bullets
+  title: What MCP Provides
+  bullets:
+  - An open protocol anyone can implement, free of vendor lock-in
+  - A growing set of pre-built integrations that plug straight into your LLM app
+  - Flexibility to switch between apps and providers, taking your context with you
+  - A standard way to build custom integrations for any AI application
+  - 'Broad ecosystem support: Claude, ChatGPT, VS Code, Cursor and many more'
+  speaker_notes: 'Frame benefits by stakeholder, as the docs do: developers save development time and
+    complexity when building or integrating AI applications; AI applications gain access to an ecosystem
+    of data sources, tools, and apps; end users get more capable agents that can access their data and
+    act on their behalf. The ecosystem point is what makes it a standard rather than a library: Claude,
+    ChatGPT, VS Code, Cursor, and many others all support MCP, so build once and integrate everywhere.'
+  purpose: Summarize what the standard gives developers, AI applications, and end users.
+  citations:
+  - source_id: source-ee13de6f50c3
+    label: What is MCP? — benefits for developers, applications, and end users; broad ecosystem support
+    url: null
+    line_start: null
+    line_end: null
+- id: slide-d77675ae180d
+  archived: false
+  layout: two_column
+  title: Host, Client, Server
+  left_content:
+  - Inside the host
+  - 'Host: the AI application, e.g. Claude Desktop or VS Code'
+  - Coordinates and manages one or more MCP clients
+  - 'Client: one per server, a dedicated 1:1 connection'
+  - Each client maintains a stateful session with its server
+  right_content:
+  - The server
+  - 'Server: a program that provides context and capabilities'
+  - Local over stdio, or remote over Streamable HTTP
+  - Local servers typically serve a single client
+  - Remote servers typically serve many clients
+  speaker_notes: 'Use the documentation''s running example: Visual Studio Code is the host. When it connects
+    to the Sentry server, the VS Code runtime instantiates a client object for Sentry; when it also connects
+    to a local filesystem server, it instantiates a second client. So one host, many clients, one client
+    per server, and each client holds a dedicated stateful connection. ''Local'' versus ''remote'' describes
+    where the server process runs and which transport it uses (stdio versus Streamable HTTP), not a different
+    architecture: a server is simply the program that provides context to clients. Local stdio servers
+    typically serve one client; remote Streamable HTTP servers typically serve many.'
+  purpose: Define the three participants and the 1:1 client-to-server relationship.
+  citations:
+  - source_id: source-ce1f4bdd0ec1
+    label: Architecture overview — host, client, and server participants; VS Code example; local vs remote
+      servers
+    url: null
+    line_start: null
+    line_end: null
+- id: slide-ec9a1c3a7cd4
+  archived: false
+  layout: two_column
+  title: Two Layers of the Protocol
+  left_content:
+  - Data layer (inner)
+  - 'JSON-RPC 2.0: requests, responses, notifications'
+  - 'Lifecycle: initialization, capability negotiation, termination'
+  - 'Server primitives: tools, resources, prompts'
+  - 'Client primitives: sampling, elicitation, logging'
+  - 'Utilities: notifications and progress tracking'
+  right_content:
+  - Transport layer (outer)
+  - 'Stdio: process streams for local servers, no network overhead'
+  - 'Streamable HTTP: POST plus optional Server-Sent Events'
+  - Standard HTTP auth; OAuth recommended for tokens
+  - Same JSON-RPC message format across all transports
+  speaker_notes: 'The key design point is that the transport layer abstracts communication details from
+    the protocol layer, so the identical JSON-RPC 2.0 message format works over every transport. Stdio
+    uses standard input/output streams for direct process communication on the same machine: optimal performance,
+    no network overhead. Streamable HTTP uses HTTP POST for client-to-server messages with optional Server-Sent
+    Events for streaming; it enables remote servers and supports standard HTTP authentication (bearer
+    tokens, API keys, custom headers), with OAuth recommended for obtaining tokens. The data layer carries
+    lifecycle management, the server primitives (tools for actions, resources for context data, prompts
+    for interaction templates), the client primitives (sampling, elicitation, logging), and utilities
+    like notifications and progress tracking.'
+  purpose: Separate what is exchanged (data layer) from how it is exchanged (transport).
+  citations:
+  - source_id: source-ce1f4bdd0ec1
+    label: Architecture overview — data layer and transport layer; stdio and Streamable HTTP transports
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-6b90b0bc68c7
+    label: Specification 2025-11-25 — JSON-RPC 2.0 message types and the HTTP authorization framework
+    url: null
+    line_start: null
+    line_end: null
+- id: slide-034c04bd1168
+  archived: false
+  layout: bullets
+  title: Lifecycle & Capability Negotiation
+  bullets:
+  - 'MCP is stateful: every session starts with an initialize handshake'
+  - The handshake negotiates protocol version, capabilities, and identity
+  - Servers declare tools, resources, prompts, and list-changed support
+  - Clients declare what they support, e.g. elicitation
+  - If no compatible protocol version is found, the connection terminates
+  - After init, the client sends notifications/initialized
+  speaker_notes: 'Use the documentation''s worked example. The client sends initialize with protocolVersion
+    2025-11-25, its capabilities (e.g. elicitation), and clientInfo. The server replies with its own capabilities:
+    in the example, tools with listChanged true (it can send tools/list_changed notifications), and resources.
+    The handshake serves three purposes: protocol version negotiation (terminate if no compatible version),
+    capability discovery (each side declares which primitives and features it handles), and identity exchange
+    (clientInfo and serverInfo for debugging). After successful initialization the client sends notifications/initialized,
+    a one-way notification with no response. All implementations MUST support the base protocol and lifecycle
+    management; capabilities decide what is available for the rest of the session.'
+  purpose: Explain how a session is established and how each side learns what the other supports.
+  citations:
+  - source_id: source-ce1f4bdd0ec1
+    label: Architecture overview — lifecycle management and the initialization exchange example
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-6b90b0bc68c7
+    label: 'Specification 2025-11-25 — lifecycle management: connection initialization, capability negotiation,
+      and session control'
+    url: null
+    line_start: null
+    line_end: null
+- id: slide-6e01b8903150
+  archived: false
+  layout: code
+  title: A Request on the Wire
+  code: "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 2,\n  \"method\": \"tools/list\"\n}\n\n{\n  \"jsonrpc\"\
+    : \"2.0\",\n  \"id\": 2,\n  \"result\": { \"tools\": [ ... ] }\n}"
+  language: json
+  speaker_notes: This is the entire wire format. The request carries a unique, non-null id that must not
+    be reused within the session; the result response echoes the same id and may carry any JSON object
+    as result. Notifications, like notifications/initialized, omit the id entirely and the receiver MUST
+    NOT respond. On failure the response carries an error object with an integer code and a message. In
+    the docs' example, tools/list returns a tools array where each entry has name, title, description,
+    and a JSON Schema inputSchema; the host aggregates tools from all connected servers into one registry
+    the LLM can call. Discovery first (tools/list), execution second (tools/call) — that pattern holds
+    for resources and prompts too.
+  purpose: Show the JSON-RPC 2.0 request/response format that underlies all MCP traffic.
+  citations:
+  - source_id: source-6b90b0bc68c7
+    label: Specification 2025-11-25 — request, response, and notification message rules
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-ce1f4bdd0ec1
+    label: Architecture overview — the tools/list discovery example and tool metadata
+    url: null
+    line_start: null
+    line_end: null
+- id: slide-ac71d1415fe3
+  archived: false
+  layout: closing
+  title: Key Takeaways
+  text: 'MCP is an open, JSON-RPC-based standard. A host runs isolated clients, each holding a 1:1 stateful
+    session to a server that exposes tools, resources, and prompts over stdio or Streamable HTTP. Next
+    lecture: build a server that exposes all three.'
+  speaker_notes: 'Recap in one breath: the problem (N-by-M integration fragmentation), the fix (one open,
+    JSON-RPC-based standard), the participants (host coordinates isolated clients, one stateful 1:1 session
+    per server), the layers (data layer for what, transport layer for how), and the lifecycle (initialize,
+    negotiate capabilities, then work). Preview Lecture 2: we scaffold a real MCP server with an official
+    SDK, expose one tool, one resource, and one prompt with proper JSON Schemas, and test it end to end
+    with the MCP Inspector.'
+  purpose: Consolidate the architecture model and preview the building lab.
+  citations:
+  - source_id: source-ce1f4bdd0ec1
+    label: Architecture overview — core concepts recap
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-ee13de6f50c3
+    label: 'What is MCP? — start building: servers, clients, and MCP Apps'
+    url: null
+    line_start: null
+    line_end: null
