@@ -1,0 +1,32 @@
+version: 1
+sources:
+- id: source-5e60f3795cf5
+  resource_id: resource-fe9bae7acd1b
+  source_version_id: 61e805da08bd3aca52a58468222bc033099ca585185301b59319b92cdc560e28
+  label: 'Hasan et al., MCP at First Glance: Security & Maintainability of MCP Servers (arXiv 2506.13538)'
+  admitted_at: '2026-10-22T11:18:12.556251+00:00'
+  representation: local-quick
+- id: source-ee13de6f50c3
+  resource_id: resource-8ca3961db93a
+  source_version_id: 662f0bbb91f9119c68e37cfd5aa6969b8c758bcfd2c7c39027eb9bc847604070
+  label: 'MCP Docs: What is MCP? (2026-07-28 intro)'
+  admitted_at: '2026-10-22T11:18:16.071729+00:00'
+  representation: local-quick
+- id: source-6b90b0bc68c7
+  resource_id: resource-4286a7d5264a
+  source_version_id: dc30a345e0c6458de8768cfcc53e912e107453862fa5b06453fedf15678f7c25
+  label: MCP Specification 2025-11-25, Overview (official spec)
+  admitted_at: '2026-10-22T11:18:19.926096+00:00'
+  representation: local-quick
+- id: source-ce1f4bdd0ec1
+  resource_id: resource-bd32c80b87d4
+  source_version_id: 7c405269d63b9aa7a50afe0afc2c3984ced1701d68b2e85961962619863fba32
+  label: 'MCP Docs: Architecture overview (2025-11-25)'
+  admitted_at: '2026-10-22T11:18:24.766355+00:00'
+  representation: local-quick
+- id: source-18ff25cbc9ab
+  resource_id: resource-49fa8cbf488f
+  source_version_id: 3946b0277ee5ab77c8abef247a18a6bda59af1c62cc7f271eca050501813de56
+  label: 'Hou et al., MCP: Landscape, Security Threats & Future Research (arXiv 2503.23278)'
+  admitted_at: '2026-10-22T11:18:26.941596+00:00'
+  representation: local-quick
