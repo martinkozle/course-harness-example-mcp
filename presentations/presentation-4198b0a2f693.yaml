@@ -177,6 +177,37 @@ slides:
     url: null
     line_start: null
     line_end: null
+- id: slide-87e787c4a338
+  archived: false
+  layout: image
+  title: The Inspector in Action
+  image_source_id: source-e5d7be869980
+  image_url: null
+  caption: 'Inspector web client: the tool list, a tools/call result with structured output, and the raw
+    JSON-RPC exchange in the monitoring panel.'
+  speaker_notes: 'This is the official Inspector web client. On the left is the list of tools the server
+    exposes — here: echo, get_weather, get_temp, list_items, get_sum, get_annotated_message. The middle
+    panel shows the result of a tools/call on list_items: the text result plus the structuredContent the
+    server returned. The right panel is the monitor: the raw JSON-RPC 2.0 exchange, with the client-to-server
+    tools/call request (name, arguments, _meta.progressToken) and the response (jsonrpc, id, result.content
+    text ''Found 2 items'', and structuredContent carrying the items array). This is the view you want
+    during the lab: confirm your tool is listed with the schema you expect, that arguments arrive with
+    the right shapes, and that the result looks like what the model will see. Use the Logs / Protocol
+    / Network tabs to change perspective, and Clear or Export the message log when you want a clean capture
+    for a bug report.'
+  purpose: 'Show the debugging experience concretely: tools, results, and the raw JSON-RPC exchange on
+    one screen.'
+  citations:
+  - source_id: source-e5d7be869980
+    label: MCP Inspector web client screenshot (official docs)
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-09db13341176
+    label: MCP Inspector (developer tool)
+    url: null
+    line_start: null
+    line_end: null
 - id: slide-be6ee50e2140
   archived: false
   layout: closing

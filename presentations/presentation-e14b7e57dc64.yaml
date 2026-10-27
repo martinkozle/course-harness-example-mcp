@@ -1,0 +1,323 @@
+schema_version: 1
+id: presentation-e14b7e57dc64
+lecture_id: lecture-3f9a080d21be
+slides:
+- id: slide-0ab345ef5acd
+  archived: false
+  layout: title
+  title: Security Risks & the MCP Ecosystem
+  subtitle: Threats, benchmarks, and the state of the ecosystem
+  speaker_notes: 'Lectures 1-2 gave you the architecture and a working server. Today we turn that same
+    architecture into an attack surface: what researchers have actually measured, and where the ecosystem
+    stands. End with the assessed skill: mapping a concrete threat to its affected protocol layer and
+    proposing a layer-appropriate mitigation.'
+  purpose: 'Open Lecture 3: frame security as the central open problem of MCP adoption and preview the
+    evidence-based structure of the lecture.'
+  citations: []
+- id: slide-b6e1e11e563d
+  archived: false
+  layout: big_statement
+  title: The Core Tension
+  statement: MCP made tools first-class, composable objects — and first-class attack targets.
+  speaker_notes: The same property that makes MCP powerful — tools are discoverable and described in natural
+    language for the LLM — is the property an attacker exploits. Nothing on the wire changes compared
+    to a normal API; the new risk is semantic. Land the thesis before the details.
+  purpose: 'State the lecture''s central thesis: MCP''s defining power is also its defining risk.'
+  citations:
+  - source_id: source-cb9fbb96c2df
+    label: Zhang et al. 2026, MCP Security Bench (MSB)
+    url: https://arxiv.org/pdf/2510.15994v2
+    line_start: null
+    line_end: null
+  - source_id: source-8f67ad0c4f39
+    label: Bora & Anapu 2026, MCP security survey & trust boundary framework
+    url: https://www.ijsr.net/archive/v15i3/SR26316110418.pdf
+    line_start: null
+    line_end: null
+- id: slide-494a1fe1a5c6
+  archived: false
+  layout: bullets
+  title: Why the Attack Surface Grew
+  bullets:
+  - 'Dynamic discovery: tools can appear, disappear, or change between sessions'
+  - Descriptions are natural language the LLM reads — data and control conflate
+  - One host connects many servers; all descriptions share one LLM context
+  - The security gate is the model itself — probabilistic and manipulable
+  speaker_notes: 'Bora & Anapu call this a ''probabilistic execution surface'': the consumer of the data
+    is itself manipulated through the data — the same data/control conflation behind prompt injection
+    (Greshake et al. 2023). Contrast with a plain REST API, where compilers, validators, and frameworks
+    enforce the interface mechanically; here the ''validator'' is a language model reading marketing-style
+    text.'
+  purpose: Explain the three architectural properties that create MCP's distinctive attack surface, contrasting
+    MCP with a plain REST API.
+  citations:
+  - source_id: source-8f67ad0c4f39
+    label: Bora & Anapu 2026, MCP security survey & trust boundary framework
+    url: https://www.ijsr.net/archive/v15i3/SR26316110418.pdf
+    line_start: null
+    line_end: null
+  - source_id: source-cb9fbb96c2df
+    label: Zhang et al. 2026, MCP Security Bench (MSB)
+    url: https://arxiv.org/pdf/2510.15994v2
+    line_start: null
+    line_end: null
+- id: slide-fe2abee69a38
+  archived: false
+  layout: two_column
+  title: The Threat Map
+  left_content:
+  - 'Catalog layer: metadata & discovery'
+  - 'Tool poisoning: hidden instructions inside tool descriptions'
+  - 'Name collision / tool shadowing: malicious lookalike wins selection'
+  - 'Preference manipulation: descriptions engineered to be picked'
+  - 'Rug pull: benign server later ships malicious metadata'
+  right_content:
+  - 'Session layer: responses & data'
+  - Indirect prompt injection via tool responses and retrieved content
+  - Cross-server data exfiltration through the agent's own tools
+  - Credential theft and sampling abuse
+  - 'Inter-agent trust: peer commands the model executes'
+  speaker_notes: 'Bora & Anapu formalize a ten-class taxonomy covering both layers — including supply-chain
+    attacks, rug pulls, and terminal deception. Hou et al. organize 16 threat scenarios across four attacker
+    types (malicious developer, external attacker, malicious user, security flaw) and four server-lifecycle
+    phases. This two-column split is a pedagogical simplification: catalog threats are planted at install/update
+    time, session threats fire at call time. Ask students which layer they''d instrument first.'
+  purpose: 'Split MCP threats into two layers: the tool catalog (planted at install time) and the live
+    session (fired at call time).'
+  citations:
+  - source_id: source-8f67ad0c4f39
+    label: Bora & Anapu 2026, MCP security survey & trust boundary framework
+    url: https://www.ijsr.net/archive/v15i3/SR26316110418.pdf
+    line_start: null
+    line_end: null
+  - source_id: source-4a440763bffe
+    label: Huang et al. 2026, MCP threat modeling & tool poisoning
+    url: https://www.mdpi.com/2624-800X/6/3/84
+    line_start: null
+    line_end: null
+  - source_id: source-cb9fbb96c2df
+    label: Zhang et al. 2026, MCP Security Bench (MSB)
+    url: https://arxiv.org/pdf/2510.15994v2
+    line_start: null
+    line_end: null
+- id: slide-688a3ed40445
+  archived: false
+  layout: bullets
+  title: What the Benchmarks Measure
+  bullets:
+  - 'MSB: 12 attack types spanning planning, invocation, and response handling'
+  - '2,000 attack instances run against real tools: 10 domains, 405 tools'
+  - 'Peak attack success rate: 75.83% across ten agents'
+  - 'Paradox: stronger models are more vulnerable, not less'
+  - 'Exfiltration study: up to 90% success even on security-tuned models'
+  - '160 automated tests, eight models: direct orders and social engineering'
+  speaker_notes: 'MSB (ICLR 2026) executes attacks against real tools through MCP rather than simulated
+    outputs, and adds Net Resilient Performance (NRP) alongside ASR and PUA to score the security/performance
+    trade-off. The SBSeg 2026 study (Barcelos et al.) found models that resist direct orders still leak
+    data in seemingly authorized contexts — up to 40% leakage — while security-oriented models reached
+    up to 90% successful exfiltration of sensitive files. Emphasize: the ''stronger model = safer'' assumption
+    is inverted.'
+  purpose: Ground the threats in measured results from MSB and the SBSeg 2026 exfiltration study.
+  citations:
+  - source_id: source-cb9fbb96c2df
+    label: Zhang et al. 2026, MCP Security Bench (MSB)
+    url: https://arxiv.org/pdf/2510.15994v2
+    line_start: null
+    line_end: null
+  - source_id: source-37626f19f209
+    label: Barcelos et al. 2026, MCP data exfiltration study (SBSeg)
+    url: https://doi.org/10.5753/sbseg.2026.28936
+    line_start: null
+    line_end: null
+- id: slide-8e9f9dd76215
+  archived: false
+  layout: two_column
+  title: 'Case Study: Tool Poisoning'
+  left_content:
+  - How it works
+  - Attacker ships a server with plausible-looking tools
+  - Malicious instructions hidden in the tool metadata
+  - Client lists tools; the LLM reads them at runtime
+  - On invocation, the model obeys the hidden instructions
+  right_content:
+  - What the evidence shows
+  - Most prevalent, impactful client-side vulnerability in STRIDE analysis
+  - 'Seven major clients: weak static validation, low parameter visibility'
+  - 5.5% of 1,899 open-source servers already tool-poisoned in the wild
+  speaker_notes: 'Huang et al. apply STRIDE and DREAD to six components — host, client, LLM, server, external
+    data stores, authorization server — and conclude tool poisoning dominates the client side. Their proposed
+    defense is layered: static metadata analysis, model decision-path tracking, behavioral anomaly detection,
+    user transparency. Hasan et al.''s corpus scan found 5.5% of 1,899 open-source servers already tool-poisoned
+    in the wild, so this is not a hypothetical. Connect back to Lecture 2: the tool description field
+    is the one field students fully control when they build servers.'
+  purpose: Walk through tool poisoning end-to-end and show it is measured in the wild, not hypothetical.
+  citations:
+  - source_id: source-4a440763bffe
+    label: Huang et al. 2026, MCP threat modeling & tool poisoning
+    url: https://www.mdpi.com/2624-800X/6/3/84
+    line_start: null
+    line_end: null
+  - source_id: source-5e60f3795cf5
+    label: Hasan et al. 2026, MCP server security & maintainability
+    url: null
+    line_start: null
+    line_end: null
+- id: slide-068ae31a6a98
+  archived: false
+  layout: bullets
+  title: Mitigations by Layer
+  bullets:
+  - 'Protocol: OAuth 2.1, TLS, strict egress — never model-only defenses'
+  - 'Host/client: static metadata validation and parameter visibility'
+  - 'Capability: least privilege via OAuth scopes, gateways, zero-trust identity'
+  - 'Runtime: behavioral anomaly detection, decision-path tracking'
+  - 'Human: transparency and human-in-the-loop for sensitive tool calls'
+  speaker_notes: 'Bora & Anapu''s Trust Boundary Mitigation Framework (TBMF) combines MCP gateways, zero-trust
+    identity, capability-based least privilege via OAuth scopes, runtime behavioral monitoring, and human-in-the-loop
+    governance, and maps threats to OWASP Agentic Top 10 2026, MITRE ATLAS, NIST IR 8596, and CSA MAESTRO.
+    Barcelos et al.''s conclusion is the memorable line: MCP architectures must not rely solely on the
+    underlying model''s safety barriers — enforce egress at the protocol layer. Drill the mapping skill:
+    each mitigation belongs to a specific layer, and that is what we test.'
+  purpose: Map mitigations to layers, following the trust-boundary defense-in-depth frameworks from the
+    survey and STRIDE studies.
+  citations:
+  - source_id: source-8f67ad0c4f39
+    label: Bora & Anapu 2026, MCP security survey & trust boundary framework
+    url: https://www.ijsr.net/archive/v15i3/SR26316110418.pdf
+    line_start: null
+    line_end: null
+  - source_id: source-4a440763bffe
+    label: Huang et al. 2026, MCP threat modeling & tool poisoning
+    url: https://www.mdpi.com/2624-800X/6/3/84
+    line_start: null
+    line_end: null
+  - source_id: source-37626f19f209
+    label: Barcelos et al. 2026, MCP data exfiltration study (SBSeg)
+    url: https://doi.org/10.5753/sbseg.2026.28936
+    line_start: null
+    line_end: null
+- id: slide-a07ba2615518
+  archived: false
+  layout: bullets
+  title: The Ecosystem Today
+  bullets:
+  - Donated to the Linux Foundation's Agentic AI Foundation, Dec 2025
+  - 10,000+ public servers; ~97M monthly SDK downloads by late 2025
+  - 'Ten official SDKs in a tiered system: TypeScript, Python, C#, Go lead as Tier 1'
+  - Adopted by Claude, ChatGPT, Gemini, Copilot, Cursor, VS Code
+  - 'Spec evolved through four versions: OAuth, Streamable HTTP, elicitation, tasks'
+  speaker_notes: 'Hasan et al. cite 25M+ weekly SDK downloads and 86% of enterprises using MCP-capable
+    models; Bora & Anapu report ~97M monthly downloads and 10,000+ public servers by late 2025. Governance
+    moved to the Linux Foundation''s Agentic AI Foundation in December 2025. The official SDK page lists
+    ten SDKs in a tiered system — TypeScript, Python, C#, Go are Tier 1; Java, Rust Tier 2; Swift, Ruby,
+    PHP, Kotlin Tier 3. Also mention the dark side: a December 2025 scan found roughly 1,000 servers exposed
+    on the public internet with no authentication at all.'
+  purpose: Situate MCP's adoption, governance, and specification maturity as of the latest evidence.
+  citations:
+  - source_id: source-8f67ad0c4f39
+    label: Bora & Anapu 2026, MCP security survey & trust boundary framework
+    url: https://www.ijsr.net/archive/v15i3/SR26316110418.pdf
+    line_start: null
+    line_end: null
+  - source_id: source-fd7ab71206de
+    label: 'MCP Docs: Official SDKs (2025-11-25)'
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-5e60f3795cf5
+    label: Hasan et al. 2026, MCP server security & maintainability
+    url: null
+    line_start: null
+    line_end: null
+- id: slide-6178f09fec70
+  archived: false
+  layout: bullets
+  title: Ecosystem Health, Measured
+  bullets:
+  - 'First large-scale study: 1,899 open-source MCP servers analyzed'
+  - 7.2% contain general vulnerabilities; 5.5% show tool poisoning
+  - Eight vulnerability classes; only three overlap traditional software bugs
+  - 66% show code smells; 14.4% contain known bug patterns
+  - Authors call for MCP-specific vulnerability databases and registry scanning
+  speaker_notes: 'Hasan et al. (ACM TOSEM 2026) combine a general-purpose static analyzer with an MCP-specific
+    scanner. Core finding: MCP''s AI-driven, non-deterministic control flow creates risks that traditional
+    maintainability metrics miss — eight vulnerability classes, only three overlapping with traditional
+    software bugs. Yet classic refactoring practice still pays off (66% show code smells). Their governance
+    asks: MCP-specific vulnerabilities should enter standardized vulnerability databases, and registries
+    should run automated MCP-aware scans.'
+  purpose: Show that ecosystem security is now an empirical, measurable field with concrete baselines.
+  citations:
+  - source_id: source-5e60f3795cf5
+    label: Hasan et al. 2026, MCP server security & maintainability
+    url: null
+    line_start: null
+    line_end: null
+- id: slide-5197a1fb3dfe
+  archived: false
+  layout: two_column
+  title: Benchmarks & Open Problems
+  left_content:
+  - Benchmarks
+  - 'MSB: end-to-end attack benchmark; ASR, PUA, NRP metrics'
+  - 'MCP-Universe: 11 real servers, 6 domains, execution-based evaluators'
+  - 'Top models struggle: GPT-5 43.7%, Grok-4 33.3%, Claude 29.4%'
+  right_content:
+  - Open research
+  - Capability attestation and trust boundaries for dynamic discovery
+  - 'Supply chain: rug pulls, registry integrity, tool provenance'
+  - 'Availability: surveyed defenses target integrity, not DoS'
+  - Formal security analysis of the MCP specification itself
+  speaker_notes: 'MCP-Universe (Salesforce, 2025) is the capability-side benchmark: even top models succeed
+    under 44% of the time on real-server tasks, and enterprise agents like Cursor do not beat a standard
+    ReAct baseline — capability and security are both open. MSB gives the attack side. Open problems follow
+    the surveys: no capability attestation in the spec, rug-pull and supply-chain risk, near-zero availability
+    defenses among the 41 surveyed defense papers, and no formal security analysis of the protocol itself.
+    Frame these as publishable student projects.'
+  purpose: Point to the measurement infrastructure and the frontier of MCP security and capability research.
+  citations:
+  - source_id: source-cb9fbb96c2df
+    label: Zhang et al. 2026, MCP Security Bench (MSB)
+    url: https://arxiv.org/pdf/2510.15994v2
+    line_start: null
+    line_end: null
+  - source_id: source-a2b6bbf8a8bc
+    label: Luo et al. 2025, MCP-Universe benchmark
+    url: https://arxiv.org/pdf/2508.14704v1
+    line_start: null
+    line_end: null
+  - source_id: source-8f67ad0c4f39
+    label: Bora & Anapu 2026, MCP security survey & trust boundary framework
+    url: https://www.ijsr.net/archive/v15i3/SR26316110418.pdf
+    line_start: null
+    line_end: null
+  - source_id: source-18ff25cbc9ab
+    label: Hou et al. 2025, MCP landscape, threats & future research
+    url: null
+    line_start: null
+    line_end: null
+- id: slide-89b5e5e7a447
+  archived: false
+  layout: closing
+  title: Key Takeaways
+  text: 'MCP''s power and its risk share one root: the LLM reads untrusted descriptions as instructions.
+    Defend in layers — protocol, client, capability, runtime, human. The ecosystem is now large enough
+    to measure (10,000+ servers) and weak enough to matter: assume every tool description and response
+    is hostile.'
+  speaker_notes: 'Assessment mapping: given a threat, name its layer (catalog, session, or transport)
+    and propose a layer-appropriate mitigation. Final-project hook: before shipping a server, audit your
+    own tool descriptions — the poison vector is the one field you control. Remind students of the outcome
+    checklist: draw the trust boundaries, cite a measured result, and name the governance framework a
+    mitigation belongs to.'
+  purpose: Close by tying threats, evidence, and mitigations back to the course outcomes and the final
+    project.
+  citations:
+  - source_id: source-8f67ad0c4f39
+    label: Bora & Anapu 2026, MCP security survey & trust boundary framework
+    url: https://www.ijsr.net/archive/v15i3/SR26316110418.pdf
+    line_start: null
+    line_end: null
+  - source_id: source-5e60f3795cf5
+    label: Hasan et al. 2026, MCP server security & maintainability
+    url: null
+    line_start: null
+    line_end: null

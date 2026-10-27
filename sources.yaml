@@ -65,3 +65,41 @@ sources:
   label: MCP Python SDK docs (v2, official)
   admitted_at: '2026-10-22T12:24:37.602844+00:00'
   representation: local-quick
+- id: source-e5d7be869980
+  resource_id: resource-294aff857492
+  source_version_id: fe3ba86324825e6182bd1b6bb924e2d4819154f9704cbe0ccfe75ad85f5a82c6
+  label: MCP Inspector web client screenshot (official docs)
+  admitted_at: '2026-10-22T12:48:23.535541+00:00'
+- id: source-a2b6bbf8a8bc
+  resource_id: resource-557cbc6e58c6
+  source_version_id: 19a07fb6e2ec4185c05b729b5285d697ba2c00a1ccd4e7be2860236c731929b7
+  label: 'Luo et al., MCP-Universe: Benchmarking LLMs with Real-World MCP Servers (arXiv 2508.14704)'
+  admitted_at: '2026-10-27T23:26:22.910062+00:00'
+  representation: local-quick
+- id: source-cb9fbb96c2df
+  resource_id: resource-c2bb0b9e2a2c
+  source_version_id: e3d2c602aa5d3432d2da48b2374459e129526301ca58d0f4324e37b5ab94f9a0
+  label: 'Zhang et al., MCP Security Bench (MSB): Benchmarking Attacks Against MCP in LLM Agents (arXiv
+    2510.15994)'
+  admitted_at: '2026-10-27T23:26:23.229390+00:00'
+  representation: local-quick
+- id: source-37626f19f209
+  resource_id: resource-9f61aa27d59b
+  source_version_id: 4f46da22b206d6fae137ec50cd6e84b1ee0f53e11b6e0e97c3123c159c0cec5b
+  label: 'Barcelos et al., Data Exfiltration in MCP-Based Intelligent Agents: Prompt Injection Vectors
+    (SBSeg 2026)'
+  admitted_at: '2026-10-27T23:26:23.550521+00:00'
+  representation: local-quick
+- id: source-8f67ad0c4f39
+  resource_id: resource-cf373e8c4c1e
+  source_version_id: 1ce19d07ee4b99d0e454f86c7232f06d8f29c0ae59da7105c03ccddc29c5f24b
+  label: 'Bora & Anapu, Security Threats in the Model Context Protocol: Survey & Trust Boundary Mitigation
+    Framework (IJSR 2026)'
+  admitted_at: '2026-10-27T23:26:23.857271+00:00'
+  representation: local-quick
+- id: source-4a440763bffe
+  resource_id: resource-a995d10fab2f
+  source_version_id: b80203a63ae78632004c5ed82644d16a0983637847ff5062421b19e86e24985a
+  label: 'Huang et al., MCP Threat Modeling: Prompt Injection with Tool Poisoning (J. Cybersecurity and
+    Privacy 2026)'
+  admitted_at: '2026-10-27T23:26:26.503329+00:00'

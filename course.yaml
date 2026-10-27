@@ -3,26 +3,8 @@ id: course-5814074ffd46
 title: 'Model Context Protocol (MCP): Architecture, Building, and Security'
 audience: Third-year computer science students with working knowledge of HTTP and JSON (REST APIs, message
   framing, schema-driven design) but no prior experience building tools for LLMs.
-goals:
-- Explain the pre-MCP fragmentation problem (per-provider, per-tool integration sprawl) that MCP solves
-  and position MCP as an open, LSP-inspired standard
-- Explain the MCP host/client/server architecture, JSON-RPC 2.0 data layer, lifecycle and capability negotiation,
-  and stdio vs Streamable HTTP transports
-- Build a working MCP server that exposes tools, resources, and prompts, and debug it with the MCP Inspector
-- Analyze the principal MCP security threats (prompt injection, tool poisoning, data exfiltration, supply-chain
-  risk) using recent academic evidence
-- 'Evaluate the current MCP ecosystem: SDKs, reference servers, registries, benchmarks, and open research
-  directions'
-outcomes:
-- Students can draw and explain the host/client/server model and trace a request through the MCP lifecycle
-  (initialize, capability negotiation, primitive invocation)
-- Students can scaffold, run, and test an MCP server in Python or TypeScript that exposes at least one
-  tool, one resource, and one prompt with correct schemas
-- Students can map a concrete MCP threat to its affected protocol layer and propose a mitigation appropriate
-  to that layer
-- Students can assess an MCP server or registry entry for security and maintainability red flags
-- Students can situate MCP within the broader agent tooling ecosystem and identify where it is strongest
-  and weakest today
+goals: []
+outcomes: []
 lectures:
 - id: lecture-90d4669983dd
   title: 'Why MCP Exists: The Problem and the Client/Host/Server Architecture'
@@ -46,6 +28,11 @@ lectures:
   - source-18ff25cbc9ab
   - source-5e60f3795cf5
   - source-ee13de6f50c3
-  presentation_id: null
+  - source-cb9fbb96c2df
+  - source-4a440763bffe
+  - source-37626f19f209
+  - source-a2b6bbf8a8bc
+  - source-8f67ad0c4f39
+  presentation_id: presentation-e14b7e57dc64
 template_profile_id: tpl-6dbe3d13f110
 template_profile_version: 3
