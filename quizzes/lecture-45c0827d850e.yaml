@@ -1,0 +1,185 @@
+schema_version: 1
+lecture_id: lecture-45c0827d850e
+questions:
+- id: question-b0001469f46b
+  prompt: Your server exposes a tool that writes to a database, a resource that holds API documentation,
+    and a prompt template for drafting emails. Who decides when each of these is used?
+  options:
+  - id: option-329c4e80c99f
+    text: The model decides when to call the tool, the application decides which resources to read, and
+      the user selects the prompt
+    correct: true
+    explanation: Tools are model-controlled, resources are application-controlled, and prompts are user-controlled
+      — the three blocks are defined precisely by who controls them.
+    citations: []
+  - id: option-b184351daa36
+    text: The application decides when to call the tool, the model decides which resource to read, and
+      the user selects the prompt
+    correct: false
+    explanation: 'This swaps the first two: tools are model-controlled — the LLM discovers and invokes
+      them. Resources are application-controlled, read-only context data.'
+    citations: []
+  - id: option-0875668c9423
+    text: 'All three are model-controlled: the LLM picks the tool, the resource, and the prompt in the
+      same way'
+    correct: false
+    explanation: Only tools are model-controlled. Resources are passive, application-controlled data,
+      and prompts are pre-built templates the user invokes.
+    citations: []
+  - id: option-c512d127771c
+    text: 'None are automatic: all three require explicit user confirmation before they can be used'
+    correct: false
+    explanation: It is tools that may require user consent before execution, precisely because they can
+      perform real, sometimes destructive actions. Resources and prompts are not consent-gated the same
+      way.
+    citations: []
+  citations:
+  - source_id: source-cf5bfe1c2e86
+    label: Understanding MCP servers — the three building blocks and who controls each
+    url: null
+    line_start: null
+    line_end: null
+- id: question-4415222f2d4d
+  prompt: In the Python SDK example, a tool is defined by a plain function with type hints and a docstring
+    — no JSON written by hand. What does the SDK do with those?
+  options:
+  - id: option-0a91ecd67cfb
+    text: It compiles the function to WebAssembly so the host can execute it in a sandbox
+    correct: false
+    explanation: The SDK does not compile or sandbox your code. Your function runs inside your own server
+      process; the SDK only wraps it in the protocol.
+    citations: []
+  - id: option-84a26094a854
+    text: It generates the tool's JSON Schema and description from the type hints and docstring, and handles
+      validation and the JSON-RPC protocol
+    correct: true
+    explanation: 'a: int, b: int is the schema and the docstring becomes the description. The SDK generates
+      the tool definitions, validates arguments, and handles the wire format.'
+    citations: []
+  - id: option-38fd76a364b1
+    text: It encrypts the docstring and sends it separately from the tool's schema
+    correct: false
+    explanation: There is no encryption step. The docstring simply becomes the tool's description inside
+      its definition, alongside the generated inputSchema.
+    citations: []
+  - id: option-cad7ad00699c
+    text: It requires you to also hand-write an inputSchema JSON file that overrides the type hints
+    correct: false
+    explanation: 'That would defeat the point of the SDK: the type hints are the schema. No separate hand-written
+      schema file is needed.'
+    citations: []
+  citations:
+  - source_id: source-88546c2c85f8
+    label: MCP Python SDK docs (v2) — type hints and docstrings generate the server
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-cb7732d7d88f
+    label: Build an MCP server — FastMCP generates tool definitions from type hints and docstrings
+    url: null
+    line_start: null
+    line_end: null
+- id: question-b4d0aa4b5b8b
+  prompt: You are running your MCP server over stdio. Why must you never write log messages to stdout?
+  options:
+  - id: option-82afc1004c98
+    text: stdout is reserved for the host's own diagnostics, and writing there raises a permission error
+    correct: false
+    explanation: stdout is not reserved for host diagnostics. It is the protocol channel between host
+      and server, which is exactly why stray output is dangerous.
+    citations: []
+  - id: option-983ad918eedd
+    text: The stdio transport has no logging API, so any write to stdout crashes the SDK
+    correct: false
+    explanation: The SDK does not crash because a logging API is missing. The problem is what stdout carries,
+      not a missing API.
+    citations: []
+  - id: option-f92e2cfc0c4c
+    text: stdout carries the JSON-RPC message stream, so any stray output corrupts the protocol messages
+      and breaks the server
+    correct: true
+    explanation: Over stdio, everything on stdout is interpreted as a protocol message, so a stray print()
+      corrupts the JSON-RPC stream. Log to stderr or a file instead; over HTTP, stdout is fine.
+    citations: []
+  - id: option-6ba63646d8db
+    text: JSON-RPC messages are binary over stdio, so text logging would break the framing
+    correct: false
+    explanation: MCP over stdio speaks JSON-RPC 2.0, which is JSON text, not binary. The corruption comes
+      from stray text being read as (and breaking) protocol messages.
+    citations: []
+  citations:
+  - source_id: source-cb7732d7d88f
+    label: 'Build an MCP server — logging in MCP servers: never write to stdout for STDIO-based servers'
+    url: null
+    line_start: null
+    line_end: null
+- id: question-de60cbdd1d10
+  prompt: 'The MCP Inspector ships as a single package with three clients: Web, CLI, and TUI. Which client
+    is the right choice for a CI pipeline that lists a server''s tools and asserts on the output?'
+  options:
+  - id: option-de5ddcd385ff
+    text: 'The CLI client, launched with --cli: scriptable and machine-readable, built for CI and shell
+      pipelines'
+    correct: true
+    explanation: The CLI client is described as a scriptable, machine-readable client for CI, shell pipelines,
+      and coding agents — for example --method tools/list piped into jq.
+    citations: []
+  - id: option-c37c01310909
+    text: The Web client, because it can export the raw message log to a file for parsing
+    correct: false
+    explanation: The Web client is a full graphical inspector in the browser, the richest surface for
+      humans. The scriptable, machine-readable interface is the CLI client.
+    citations: []
+  - id: option-72f820f263b8
+    text: The TUI client, because it runs in a terminal and can be driven by recorded keystrokes
+    correct: false
+    explanation: The TUI is an interactive terminal UI for when a browser is not available — it is for
+      people, not for machine-readable scripting.
+    citations: []
+  - id: option-0db01a64a614
+    text: Any of the three, because they share the same core and behave identically
+    correct: false
+    explanation: They do share one core, so a connection behaves identically across them — but only the
+      CLI client is scriptable and machine-readable, which is what CI needs.
+    citations: []
+  citations:
+  - source_id: source-09db13341176
+    label: MCP Inspector — three clients behind one binary; the CLI is scriptable and machine-readable
+      for CI
+    url: null
+    line_start: null
+    line_end: null
+- id: question-97d647712f27
+  prompt: How does a host first learn what a server's tools are, and how does it then execute one of them?
+  options:
+  - id: option-550b90770669
+    text: The server pushes tool definitions over Server-Sent Events when the session starts, and the
+      host calls them by name
+    correct: false
+    explanation: 'Tool discovery is a request/response: the host asks via tools/list. Server-Sent Events
+      are an optional part of the Streamable HTTP transport, not a discovery mechanism.'
+    citations: []
+  - id: option-944236502353
+    text: The host calls tools/define once per tool, then invokes the tool as a plain function call
+    correct: false
+    explanation: There is no tools/define method. The host discovers tools via tools/list and executes
+      one via tools/call.
+    citations: []
+  - id: option-1ffcaf8a887b
+    text: The host subscribes with resources/subscribe and polls for tool changes
+    correct: false
+    explanation: resources/subscribe concerns resource updates, not tool discovery. Tool discovery is
+      tools/list, and tool execution is tools/call.
+    citations: []
+  - id: option-f0a0fa2b3746
+    text: The host discovers them via tools/list and executes one via tools/call
+    correct: true
+    explanation: 'Discovery first, execution second: tools/list returns tool definitions with their schemas,
+      and tools/call executes the chosen tool with typed arguments.'
+    citations: []
+  citations:
+  - source_id: source-cf5bfe1c2e86
+    label: Understanding MCP servers — tools/list to discover, tools/call to execute
+    url: null
+    line_start: null
+    line_end: null

@@ -1,0 +1,239 @@
+schema_version: 1
+lecture_id: lecture-3f9a080d21be
+questions:
+- id: question-9849b2d2d58f
+  prompt: Why did MCP make tools first-class attack targets even though the wire protocol is ordinary
+    JSON-RPC 2.0?
+  options:
+  - id: option-9a341ff105ee
+    text: Because hosts run every server with the same privileges, so any server can read the others'
+      memory
+    correct: false
+    explanation: Process isolation is not the distinctive risk. The shared risk is that the LLM itself
+      consumes tool metadata as instructions.
+    citations: []
+  - id: option-70170090bf86
+    text: Because tools are discoverable and described in natural language for the LLM, so the model that
+      reads the descriptions can be manipulated by them
+    correct: true
+    explanation: Nothing on the wire is exotic; the new risk is semantic. The same discoverability and
+      natural-language descriptions that make tools composable are what an attacker exploits.
+    citations: []
+  - id: option-1f616c68c8a2
+    text: Because JSON-RPC 2.0 does not authenticate messages by default, so any peer can inject tool
+      calls
+    correct: false
+    explanation: MCP provides an authorization framework for HTTP transports, including standard HTTP
+      auth with OAuth recommended for tokens. The distinctive MCP risk is semantic, not missing authentication.
+    citations: []
+  - id: option-67115b7cbcc9
+    text: Because MCP replaced HTTP with a new transport that lacks TLS by default
+    correct: false
+    explanation: MCP runs over stdio or Streamable HTTP — ordinary HTTP, where TLS and standard authentication
+      are available. The attack surface grew because of the semantics, not the transport.
+    citations: []
+  citations:
+  - source_id: source-cb9fbb96c2df
+    label: Zhang et al. 2026, MCP Security Bench (MSB) — natural-language metadata enlarges the attack
+      surface
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-8f67ad0c4f39
+    label: Bora & Anapu 2026, MCP security survey — probabilistic execution surface; data and control
+      conflate
+    url: null
+    line_start: null
+    line_end: null
+- id: question-967312617396
+  prompt: How does tool poisoning work, and how common is it in the wild?
+  options:
+  - id: option-13c37b6ae578
+    text: An attacker swaps a server's binary mid-session; 5.5% of open-source servers had already been
+      swapped when scanned
+    correct: false
+    explanation: A benign server later shipping malicious content describes a rug pull, not tool poisoning.
+      The measured 5.5% figure refers to tool poisoning planted in tool metadata.
+    citations: []
+  - id: option-d615829ebf48
+    text: An attacker forges JSON-RPC responses with spoofed ids; 7.2% of open-source servers accept such
+      forgeries
+    correct: false
+    explanation: The 7.2% figure is the share of servers with general vulnerabilities, not id-forgery
+      tolerance. Tool poisoning works through metadata the model reads, not through forged responses.
+    citations: []
+  - id: option-c9d33564b001
+    text: An attacker embeds malicious instructions in a tool's metadata; when the LLM reads the description
+      at runtime it may obey. 5.5% of 1,899 open-source servers were already poisoned
+    correct: true
+    explanation: Huang et al. identify tool poisoning — malicious instructions in tool metadata — as the
+      most prevalent client-side vulnerability, and Hasan et al.'s corpus scan found 5.5% of 1,899 open-source
+      servers already affected.
+    citations: []
+  - id: option-6ada971205a7
+    text: An attacker registers a lookalike tool name that wins selection; 5.5% of MCP clients fail to
+      detect name collisions
+    correct: false
+    explanation: Name collision and tool shadowing are a separate threat. The 5.5% figure measures tool-poisoned
+      servers in the corpus scan, not clients failing collision checks.
+    citations: []
+  citations:
+  - source_id: source-4a440763bffe
+    label: 'Huang et al. 2026, MCP threat modeling — tool poisoning: malicious instructions embedded in
+      tool metadata'
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-5e60f3795cf5
+    label: Hasan et al. 2026, MCP at First Glance — 5.5% of 1,899 open-source servers exhibit tool poisoning
+    url: null
+    line_start: null
+    line_end: null
+- id: question-84fb25bf6c58
+  prompt: MSB executed 2,000 attack instances across 10 domains and 405 real tools, evaluating ten LLM
+    agents. What did it find about model strength and vulnerability?
+  options:
+  - id: option-a2f4ba4e481a
+    text: 'Model strength made no difference: attack success rates were flat across all ten agents'
+    correct: false
+    explanation: MSB found a clear relationship between capability and vulnerability rather than a flat
+      result across agents.
+    citations: []
+  - id: option-47ba58ab2e48
+    text: Stronger models were more vulnerable, because their better tool-calling and instruction-following
+      make them easier to exploit
+    correct: true
+    explanation: 'This inverts the ''stronger model = safer'' assumption: models with stronger performance
+      are more vulnerable due to their outstanding tool calling and instruction following capabilities.'
+    citations: []
+  - id: option-e983584daef8
+    text: Only security-tuned models were vulnerable; general-purpose models resisted the attacks
+    correct: false
+    explanation: The security-tuning finding comes from the exfiltration study, and even there security-oriented
+      models reached up to 90% successful exfiltration — they were not the safe group.
+    citations: []
+  - id: option-46425eac3b86
+    text: Weaker models were more vulnerable, because they misread the attack instructions
+    correct: false
+    explanation: This reverses the finding. It is precisely the strong models' instruction-following ability
+      that the attacks exploit.
+    citations: []
+  citations:
+  - source_id: source-cb9fbb96c2df
+    label: Zhang et al. 2026, MCP Security Bench (MSB) — stronger models are more vulnerable
+    url: null
+    line_start: null
+    line_end: null
+- id: question-458c63e11752
+  prompt: The SBSeg exfiltration study found up to 90% successful exfiltration even on security-tuned
+    models. What conclusion do its authors draw for MCP architects?
+  options:
+  - id: option-78ce10546b44
+    text: Use the strongest available model, because its safety alignment is the strongest barrier against
+      exfiltration
+    correct: false
+    explanation: 'The study shows the opposite: even security-oriented models leaked, with up to 90% successful
+      exfiltration of sensitive files in the worst cases.'
+    citations: []
+  - id: option-3acb0e64da95
+    text: Add a second LLM to review the first model's tool calls before execution
+    correct: false
+    explanation: A second model is not the authors' conclusion. The barrier that failed was the model
+      itself, so stacking models does not fix a model-only defense.
+    citations: []
+  - id: option-c0a332df0dd8
+    text: Disable sampling and elicitation entirely, because client-side primitives are the exfiltration
+      path
+    correct: false
+    explanation: The study does not single out sampling or elicitation. Its conclusion is about not trusting
+      model safety as the sole defense, and enforcing egress controls at the protocol layer.
+    citations: []
+  - id: option-102b290fe694
+    text: MCP architectures must not rely solely on the model's safety barriers — enforce strict egress
+      controls at the protocol layer
+    correct: true
+    explanation: 'This is the paper''s explicit conclusion: models resistant to direct orders still leaked
+      in seemingly authorized contexts, so egress must be enforced outside the model.'
+    citations: []
+  citations:
+  - source_id: source-37626f19f209
+    label: Barcelos et al. 2026, MCP data exfiltration study — do not rely solely on model safety; enforce
+      egress at the protocol layer
+    url: null
+    line_start: null
+    line_end: null
+- id: question-270abeccb350
+  prompt: Which statement about the state of the MCP ecosystem is supported by the course sources?
+  options:
+  - id: option-1f80c4825b92
+    text: MCP was donated to the Linux Foundation's Agentic AI Foundation in December 2025, and there
+      were 10,000+ public servers by late 2025
+    correct: true
+    explanation: Bora & Anapu report the December 2025 donation to the Linux Foundation's Agentic AI Foundation,
+      ~97M monthly SDK downloads, and 10,000+ publicly available servers by late 2025.
+    citations: []
+  - id: option-faece8bc639d
+    text: MCP remains under Anthropic's direct control, with 1,899 public servers
+    correct: false
+    explanation: Governance moved to the Linux Foundation's Agentic AI Foundation in December 2025. The
+      1,899 figure is the number of servers Hasan et al. analyzed in their study, not the size of the
+      public ecosystem.
+    citations: []
+  - id: option-4784526bb3e0
+    text: The Linux Foundation now maintains all ten official language SDKs
+    correct: false
+    explanation: The sources describe ten official SDKs in a tiered system — TypeScript, Python, C#, and
+      Go leading as Tier 1 — but do not state that the Foundation maintains them.
+    citations: []
+  - id: option-5bc880f75586
+    text: The specification has been frozen since the 2025-06-18 version, with no new features shipped
+    correct: false
+    explanation: The spec keeps evolving across versions such as 2025-11-25, adding OAuth authorization,
+      Streamable HTTP, elicitation, and tasks.
+    citations: []
+  citations:
+  - source_id: source-8f67ad0c4f39
+    label: Bora & Anapu 2026 — donated to the Linux Foundation's Agentic AI Foundation in December 2025;
+      10,000+ active servers by late 2025
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-fd7ab71206de
+    label: 'MCP Docs: Official SDKs — ten official SDKs in a tiered system'
+    url: null
+    line_start: null
+    line_end: null
+- id: question-8895302eca37
+  prompt: A survey of 41 defense papers on MCP security found a systematic gap. What was it?
+  options:
+  - id: option-b39bcdc2d586
+    text: Half of them proposed availability mitigations at the transport layer, but none were evaluated
+    correct: false
+    explanation: 'The gap is the opposite: the surveyed papers did not propose availability defenses at
+      all.'
+    citations: []
+  - id: option-f8d5a1041101
+    text: All of them were evaluated only on simulated tools, never on real MCP deployments
+    correct: false
+    explanation: The reported gap concerns which threat dimension is addressed — integrity versus availability
+      — not the realism of the evaluation setup.
+    citations: []
+  - id: option-29dce787401f
+    text: All 41 surveyed defense papers focus exclusively on integrity, with zero availability protections
+    correct: true
+    explanation: 'Bora & Anapu identify this as a critical research gap: surveyed defenses target integrity,
+      leaving denial-of-service and availability risks unaddressed.'
+    citations: []
+  - id: option-5fe9b1bb70c4
+    text: Only the rug-pull defenses addressed availability; the rest ignored denial of service
+    correct: false
+    explanation: No surveyed defense addressed availability at all. The zero-availability finding is the
+      point of the gap.
+    citations: []
+  citations:
+  - source_id: source-8f67ad0c4f39
+    label: Bora & Anapu 2026 — all 41 surveyed defense papers focus exclusively on integrity, with zero
+      availability protections
+    url: null
+    line_start: null
+    line_end: null

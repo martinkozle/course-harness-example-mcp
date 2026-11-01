@@ -1,0 +1,166 @@
+schema_version: 1
+lecture_id: lecture-90d4669983dd
+questions:
+- id: question-5274b8773c7a
+  prompt: Before MCP, every AI application hand-rolled its integrations for each tool and data source.
+    What was the core cost of this pre-MCP approach?
+  options:
+  - id: option-1f088d5c4110
+    text: N apps times M tools meant N-by-M one-off connectors, each with its own schema, so nothing could
+      be reused across apps
+    correct: true
+    explanation: 'This is the fragmentation the standard fixes: integrations were per app and per tool,
+      and tool-calling formats were provider-specific, so context and integrations could not move between
+      apps or vendors.'
+    citations: []
+  - id: option-f02f4893378a
+    text: JSON-RPC 2.0 had to be re-implemented for every app-tool pair, because no wire format existed
+    correct: false
+    explanation: JSON-RPC 2.0 is the standard message format that MCP itself uses. The pre-MCP problem
+      was the lack of a shared protocol for discovering and invoking capabilities, not the absence of
+      a wire format.
+    citations: []
+  - id: option-eeb3d11b49ce
+    text: HTTP could not carry tool results, so each application invented its own framing
+    correct: false
+    explanation: HTTP and JSON were never the bottleneck — MCP is built directly on both, with stdio and
+      Streamable HTTP as its transports. The fragmentation was in per-app, per-tool connector interfaces.
+    citations: []
+  - id: option-b186a0c3029f
+    text: Language models could not be prompted in natural language, so every integration had to be hardcoded
+    correct: false
+    explanation: 'Natural-language prompting was never the obstacle. The cost was duplicated engineering:
+      each app re-implemented every integration by hand, with no shared way for models to discover and
+      invoke capabilities.'
+    citations: []
+  citations:
+  - source_id: source-ee13de6f50c3
+    label: What is MCP? — a standardized way to connect AI applications to external systems
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-6b90b0bc68c7
+    label: Specification 2025-11-25 — MCP as an open protocol for LLM applications and external data sources
+      and tools
+    url: null
+    line_start: null
+    line_end: null
+- id: question-ab9f8b99b697
+  prompt: A host such as VS Code connects to three MCP servers at the same time. According to the architecture,
+    what exists inside the host?
+  options:
+  - id: option-252d652cde2f
+    text: One shared client that multiplexes all three servers over a single stateful session
+    correct: false
+    explanation: The host creates one MCP client for each MCP server; there is no shared multiplexing
+      client in the architecture.
+    citations: []
+  - id: option-b3c29ad90ed2
+    text: 'Three clients, one per server, but they are stateless: every message is independent and nothing
+      about the session is retained'
+    correct: false
+    explanation: Each client maintains a stateful session with its server. That statefulness is why the
+      initialize handshake and capability negotiation exist at session start.
+    citations: []
+  - id: option-9c975f029aee
+    text: Three clients, one per server, each maintaining a dedicated, stateful session with its own server
+    correct: true
+    explanation: In the docs' example, VS Code instantiates one client object per server it connects to
+      (Sentry, filesystem, ...), and each client holds a dedicated stateful connection.
+    citations: []
+  - id: option-381a99c5af30
+    text: One data-layer client and one transport-layer client, because the two protocol layers each need
+      their own connection
+    correct: false
+    explanation: 'The two layers describe one protocol: the data layer defines what is exchanged and the
+      transport layer how. Layers do not create additional clients.'
+    citations: []
+  citations:
+  - source_id: source-ce1f4bdd0ec1
+    label: Architecture overview — participants; one client per server; dedicated stateful connection
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-6b90b0bc68c7
+    label: Specification 2025-11-25 — base protocol, lifecycle management, and session control
+    url: null
+    line_start: null
+    line_end: null
+- id: question-96070bdd19fc
+  prompt: During the initialize handshake, client and server exchange protocol versions and capabilities.
+    What happens if no compatible protocol version is found?
+  options:
+  - id: option-a0db3eaa4dfa
+    text: The client silently falls back to the oldest protocol version it knows and continues the session
+    correct: false
+    explanation: 'Version negotiation is explicit: if no compatible version is found, the connection terminates.
+      There is no silent fallback to an older version.'
+    citations: []
+  - id: option-986db7dde277
+    text: The connection terminates
+    correct: true
+    explanation: The handshake negotiates protocol version, capabilities, and identity; failing to agree
+      on a compatible version ends the connection before normal operations begin.
+    citations: []
+  - id: option-e0b03743ce29
+    text: The server downgrades to whatever version the client advertises, to keep the connection alive
+    correct: false
+    explanation: The server does not unilaterally downgrade. Version negotiation either succeeds for both
+      sides or the connection terminates.
+    citations: []
+  - id: option-7c04f400b10d
+    text: The version is re-negotiated lazily, with the first tools/list request carrying it
+    correct: false
+    explanation: Version agreement happens during initialize, before operations like tools/list can proceed.
+      After success the client sends notifications/initialized.
+    citations: []
+  citations:
+  - source_id: source-ce1f4bdd0ec1
+    label: Architecture overview — lifecycle management and the initialization exchange
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-6b90b0bc68c7
+    label: Specification 2025-11-25 — connection initialization, capability negotiation, and session control
+    url: null
+    line_start: null
+    line_end: null
+- id: question-516d6f0f5c63
+  prompt: After a successful handshake, the client sends notifications/initialized. What distinguishes
+    this message from a request such as tools/list?
+  options:
+  - id: option-9be4ddb6d0fb
+    text: It is encrypted with the session key negotiated during initialize
+    correct: false
+    explanation: The initialize exchange covers protocol version, capabilities, and identity — it does
+      not negotiate a session encryption key.
+    citations: []
+  - id: option-fdff3134f70c
+    text: It uses a different namespace, so the server must still reply with a result object
+    correct: false
+    explanation: 'The notifications/ prefix does not change the response rule: notifications are one-way
+      and the receiver MUST NOT send a response.'
+    citations: []
+  - id: option-4e926d14740c
+    text: It carries the id 0, which the server echoes back in an empty result
+    correct: false
+    explanation: Notifications carry no id at all — they MUST NOT include an ID. id 0 is not a reserved
+      marker for one-way messages.
+    citations: []
+  - id: option-28b47bb8ae45
+    text: It carries no id field, and the receiver MUST NOT send a response
+    correct: true
+    explanation: Requests carry a unique non-null id and get a response; notifications omit the id entirely
+      and are one-way, which is why notifications/initialized never gets a reply.
+    citations: []
+  citations:
+  - source_id: source-6b90b0bc68c7
+    label: Specification 2025-11-25 — request, response, and notification message rules
+    url: null
+    line_start: null
+    line_end: null
+  - source_id: source-ce1f4bdd0ec1
+    label: Architecture overview — the initialization exchange and notifications/initialized
+    url: null
+    line_start: null
+    line_end: null
