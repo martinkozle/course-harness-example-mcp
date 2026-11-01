@@ -6,65 +6,89 @@ sources:
   label: 'Hasan et al., MCP at First Glance: Security & Maintainability of MCP Servers (arXiv 2506.13538)'
   admitted_at: '2026-10-22T11:18:12.556251+00:00'
   representation: local-quick
+  locator:
+    url: https://arxiv.org/pdf/2506.13538
+    arxiv_id: '2506.13538'
 - id: source-ee13de6f50c3
   resource_id: resource-8ca3961db93a
   source_version_id: 662f0bbb91f9119c68e37cfd5aa6969b8c758bcfd2c7c39027eb9bc847604070
   label: 'MCP Docs: What is MCP? (2026-07-28 intro)'
   admitted_at: '2026-10-22T11:18:16.071729+00:00'
   representation: local-quick
+  locator:
+    url: https://modelcontextprotocol.io/docs/2026-07-28/getting-started/intro
 - id: source-6b90b0bc68c7
   resource_id: resource-4286a7d5264a
   source_version_id: dc30a345e0c6458de8768cfcc53e912e107453862fa5b06453fedf15678f7c25
   label: MCP Specification 2025-11-25, Overview (official spec)
   admitted_at: '2026-10-22T11:18:19.926096+00:00'
   representation: local-quick
+  locator:
+    url: https://modelcontextprotocol.io/specification/2025-11-25/basic
 - id: source-ce1f4bdd0ec1
   resource_id: resource-bd32c80b87d4
   source_version_id: 7c405269d63b9aa7a50afe0afc2c3984ced1701d68b2e85961962619863fba32
   label: 'MCP Docs: Architecture overview (2025-11-25)'
   admitted_at: '2026-10-22T11:18:24.766355+00:00'
   representation: local-quick
+  locator:
+    url: https://modelcontextprotocol.io/docs/2025-11-25/learn/architecture
 - id: source-18ff25cbc9ab
   resource_id: resource-49fa8cbf488f
   source_version_id: 3946b0277ee5ab77c8abef247a18a6bda59af1c62cc7f271eca050501813de56
   label: 'Hou et al., MCP: Landscape, Security Threats & Future Research (arXiv 2503.23278)'
   admitted_at: '2026-10-22T11:18:26.941596+00:00'
   representation: local-quick
+  locator:
+    url: https://arxiv.org/pdf/2503.23278v3
+    arxiv_id: '2503.23278'
 - id: source-038f6eca5fe5
   resource_id: resource-ad2ff472a6f2
   source_version_id: 241dcbca3493aa5d7d7541f2eca81df8f8e27c73f1c3c6e37b733e55b53ed33f
   label: Official MCP architecture diagram (host, local & remote servers; modelcontextprotocol docs)
   admitted_at: '2026-10-22T12:08:34.480731+00:00'
+  locator:
+    url: https://github.com/user-attachments/assets/cd815bd0-d981-4218-bf93-0dec870af993
 - id: source-fd7ab71206de
   resource_id: resource-cc25b4353fec
   source_version_id: bbe581a92ca95505f0a430bbf013aae22ff6f95e141fc110a511d290df842f4b
   label: 'MCP Docs: Official SDKs (2025-11-25)'
   admitted_at: '2026-10-22T12:14:21.656746+00:00'
   representation: local-quick
+  locator:
+    url: https://modelcontextprotocol.io/docs/2025-11-25/sdk
 - id: source-cb7732d7d88f
   resource_id: resource-0712ec2fc5c9
   source_version_id: 4c486c7cfc239730dd1857b555cea0214a88b608a39986c5ddf38ab96478b727
   label: 'MCP Docs: Build an MCP server tutorial (2025-11-25)'
   admitted_at: '2026-10-22T12:14:21.937285+00:00'
   representation: local-quick
+  locator:
+    url: https://modelcontextprotocol.io/docs/2025-11-25/develop/build-server
 - id: source-09db13341176
   resource_id: resource-f21ffd28d888
   source_version_id: 492ee8a82b567b98646f5958eb945770ceb3cb0291169a7864ae611fbfcaaea5
   label: 'MCP Docs: MCP Inspector developer tool (2026-07-28)'
   admitted_at: '2026-10-22T12:14:22.165682+00:00'
   representation: local-quick
+  locator:
+    url: https://modelcontextprotocol.io/docs/2026-07-28/tools/inspector
 - id: source-cf5bfe1c2e86
   resource_id: resource-794320090095
   source_version_id: 3ab09234bce939d765e30646cf1a99e86b279699536b44da9524c78e438d0b23
   label: 'MCP Docs: Understanding MCP servers (server concepts)'
   admitted_at: '2026-10-22T12:14:55.505566+00:00'
   representation: local-quick
+  locator:
+    url: https://modelcontextprotocol.io/docs/2025-06-18/learn/server-concepts
 - id: source-88546c2c85f8
   resource_id: resource-f4b7b5a2c8fd
   source_version_id: 4454b1b940b1ed870882c0c151f9e8a41b95624e8ed55ea9fba30bc8ed5c77a6
   label: MCP Python SDK docs (v2, official)
   admitted_at: '2026-10-22T12:24:37.602844+00:00'
   representation: local-quick
+  locator:
+    url: https://py.sdk.modelcontextprotocol.io/
 - id: source-e5d7be869980
   resource_id: resource-294aff857492
   source_version_id: fe3ba86324825e6182bd1b6bb924e2d4819154f9704cbe0ccfe75ad85f5a82c6
@@ -76,6 +100,9 @@ sources:
   label: 'Luo et al., MCP-Universe: Benchmarking LLMs with Real-World MCP Servers (arXiv 2508.14704)'
   admitted_at: '2026-10-27T23:26:22.910062+00:00'
   representation: local-quick
+  locator:
+    url: https://arxiv.org/pdf/2508.14704v1
+    arxiv_id: '2508.14704'
 - id: source-cb9fbb96c2df
   resource_id: resource-c2bb0b9e2a2c
   source_version_id: e3d2c602aa5d3432d2da48b2374459e129526301ca58d0f4324e37b5ab94f9a0
@@ -83,6 +110,9 @@ sources:
     2510.15994)'
   admitted_at: '2026-10-27T23:26:23.229390+00:00'
   representation: local-quick
+  locator:
+    url: https://arxiv.org/pdf/2510.15994v2
+    arxiv_id: '2510.15994'
 - id: source-37626f19f209
   resource_id: resource-9f61aa27d59b
   source_version_id: 4f46da22b206d6fae137ec50cd6e84b1ee0f53e11b6e0e97c3123c159c0cec5b
@@ -90,6 +120,9 @@ sources:
     (SBSeg 2026)'
   admitted_at: '2026-10-27T23:26:23.550521+00:00'
   representation: local-quick
+  locator:
+    url: https://doi.org/10.5753/sbseg.2026.28936
+    doi: 10.5753/sbseg.2026.28936
 - id: source-8f67ad0c4f39
   resource_id: resource-cf373e8c4c1e
   source_version_id: 1ce19d07ee4b99d0e454f86c7232f06d8f29c0ae59da7105c03ccddc29c5f24b
@@ -97,6 +130,8 @@ sources:
     Framework (IJSR 2026)'
   admitted_at: '2026-10-27T23:26:23.857271+00:00'
   representation: local-quick
+  locator:
+    url: https://www.ijsr.net/archive/v15i3/SR26316110418.pdf
 - id: source-4a440763bffe
   resource_id: resource-a995d10fab2f
   source_version_id: b80203a63ae78632004c5ed82644d16a0983637847ff5062421b19e86e24985a
